@@ -32,12 +32,32 @@ def sitemap():
 
 @app.route('/user', methods=['GET'])
 def handle_hello():
+    all_people = User.query.all()
+    all_people = list(map(lambda x: x.serialize(), all_people))
+    return jsonify(all_people), 200
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
 
-    return jsonify(response_body), 200
+@app.route('/user', methods=['POST'])
+def handle_person():
+    """
+    Create person and retrieve all persons
+    """
+    # POST request
+   
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'username' not in body:
+        raise APIException('You need to specify the username', status_code=400)
+    if 'email' not in body:
+        raise APIException('You need to specify the email', status_code=400)
+    if 'password' not in body:
+        raise APIException('You need to specify the password', status_code=400)    
+    user1 = User(username=body['username'], email=body['email'], password=body['password'], is_active=body['is_active'])
+    db.session.add(user1)
+    db.session.commit()
+    return "ok", 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
