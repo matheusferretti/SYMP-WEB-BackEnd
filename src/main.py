@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Skill
 #from models import Person
 
 app = Flask(__name__)
@@ -36,6 +36,12 @@ def handle_hello():
     all_people = list(map(lambda x: x.serialize(), all_people))
     return jsonify(all_people), 200
 
+@app.route('/skill', methods=['GET'])
+def handle_skills():
+    all_skills = Skill.query.all()
+    all_skills = list(map(lambda x: x.serialize(), all_skills))
+    return jsonify(all_skills), 200
+
 
 @app.route('/user', methods=['POST'])
 def handle_person():
@@ -55,6 +61,21 @@ def handle_person():
         raise APIException('You need to specify the password', status_code=400)    
     user1 = User(username=body['username'], email=body['email'], password=body['password'], is_active=body['is_active'])
     db.session.add(user1)
+    db.session.commit()
+    return "ok", 200
+
+@app.route('/skill', methods=['POST'])
+def handle_skill():
+    """
+    Create person and retrieve all persons
+    """
+    # POST request
+   
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)    
+    skill1 = Skill(skill_type=body['skill_type'], user_id=body['user_id'])
+    db.session.add(skill1)
     db.session.commit()
     return "ok", 200
 
