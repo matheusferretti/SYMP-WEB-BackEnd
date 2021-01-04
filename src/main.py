@@ -95,7 +95,7 @@ def handle_exp():
     body = request.get_json()
     if body is None:
         raise APIException("You need to specify the request body as a json object", status_code=400)    
-    exp1 = Experience(experience=body['experience'], user_id=body['user_id'])
+    exp1 = Experience(company=body['company'], position=body['position'], description=body['description'] , user_id=body['user_id'])
     db.session.add(exp1)
     db.session.commit()
     return "ok", 200
