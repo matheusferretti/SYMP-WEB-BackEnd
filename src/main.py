@@ -42,6 +42,12 @@ def handle_skills():
     all_skills = list(map(lambda x: x.serialize(), all_skills))
     return jsonify(all_skills), 200
 
+@app.route('/experience', methods=['GET'])
+def handle_exps():
+    all_exps = Experience.query.all()
+    all_exps = list(map(lambda x: x.serialize(), all_exps))
+    return jsonify(all_exps), 200
+
 
 @app.route('/user', methods=['POST'])
 def handle_person():
@@ -76,6 +82,21 @@ def handle_skill():
         raise APIException("You need to specify the request body as a json object", status_code=400)    
     skill1 = Skill(skill_type=body['skill_type'], user_id=body['user_id'])
     db.session.add(skill1)
+    db.session.commit()
+    return "ok", 200
+
+@app.route('/experience', methods=['POST'])
+def handle_exp():
+    """
+    Create person and retrieve all persons
+    """
+    # POST request
+   
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)    
+    exp1 = Experience(experience=body['experience'], user_id=body['user_id'])
+    db.session.add(exp1)
     db.session.commit()
     return "ok", 200
 
