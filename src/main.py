@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Skill, Experience
+from models import db, User, Skill, Experience, Project
 #from models import Person
 
 app = Flask(__name__)
@@ -47,6 +47,12 @@ def handle_exps():
     all_exps = Experience.query.all()
     all_exps = list(map(lambda x: x.serialize(), all_exps))
     return jsonify(all_exps), 200
+
+@app.route('/project', methods=['GET'])
+def handle_exps():
+    all_projects = Project.query.all()
+    all_projects = list(map(lambda x: x.serialize(), all_projects))
+    return jsonify(all_projects), 200
 
 
 @app.route('/user', methods=['POST'])
@@ -97,6 +103,21 @@ def handle_exp():
         raise APIException("You need to specify the request body as a json object", status_code=400)    
     exp1 = Experience(company=body['company'], position=body['position'], description=body['description'] , user_id=body['user_id'])
     db.session.add(exp1)
+    db.session.commit()
+    return "ok", 200
+
+@app.route('/project', methods=['POST'])
+def handle_project():
+    """
+    Create person and retrieve all persons
+    """
+    # POST request
+   
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)    
+    project1 = Project(project_name=body['project_name'], project_description=body['project_description'], user_id=body['user_id'])
+    db.session.add(project1)
     db.session.commit()
     return "ok", 200
 
