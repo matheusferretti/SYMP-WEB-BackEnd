@@ -49,7 +49,7 @@ def handle_exps():
     return jsonify(all_exps), 200
 
 @app.route('/project', methods=['GET'])
-def handle_exps():
+def handle_projects():
     all_projects = Project.query.all()
     all_projects = list(map(lambda x: x.serialize(), all_projects))
     return jsonify(all_projects), 200
