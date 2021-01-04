@@ -9,6 +9,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     username = db.Column(db.String(120), unique=True, nullable=False)
     skills = db.relationship('Skill', backref='user', lazy=True)
+    experiences = db.relationship('Experience', backref='user', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -35,7 +36,25 @@ class Skill(db.Model):
         return {
             "id": self.id,
             "skill_type": self.skill_type
-            # do not serialize the password, its a security breach
+        }
+
+class Experience(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company = db.Column(db.String(120), unique=False, nullable=True)
+    position = db.Column(db.String(120), unique=False, nullable=True)
+    description = db.Column(db.String(120), unique=False, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+        nullable=False)
+
+    def __repr__(self):
+        return '<Experience %r>' % self.company
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "company": self.company,
+            "position": self.position,
+            "description": self.description
         }
 
 # class Person(db.Model):
