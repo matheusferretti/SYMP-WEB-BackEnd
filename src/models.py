@@ -20,8 +20,9 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "username": self.username,
-            "skills": list(map(lambda x: x.serialize(), self.skills))
-            # do not serialize the password, its a security breach
+            "skills": list(map(lambda x: x.serialize(), self.skills)),
+            "experiences": list(map(lambda x: x.serialize(), self.experiences)),
+            "projects": list(map(lambda x: x.serialize(), self.projects))
         }
 
 class Skill(db.Model):
