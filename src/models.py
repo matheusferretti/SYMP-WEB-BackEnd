@@ -22,7 +22,8 @@ class User(db.Model):
             "username": self.username,
             "skills": list(map(lambda x: x.serialize(), self.skills)),
             "experiences": list(map(lambda x: x.serialize(), self.experiences)),
-            "projects": list(map(lambda x: x.serialize(), self.projects))
+            "projects": list(map(lambda x: x.serialize(), self.projects)),
+            "password": self.password
         }
 
 class Skill(db.Model):
