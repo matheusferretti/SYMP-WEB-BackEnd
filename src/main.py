@@ -108,6 +108,19 @@ def handle_person():
     db.session.commit()
     return "ok", 200
 
+@app.route('/user/<int:user_id>', methods=['GET'])
+@jwt_required
+def get_single_person(user_id):
+    """
+    Single person
+    """
+    
+    if request.method == 'GET':
+        user1 = User.query.get(user_id)
+        return jsonify(user1.serialize()), 200
+
+    return "Invalid Method", 404
+
 @app.route('/skill', methods=['POST'])
 def handle_skill():
     """
