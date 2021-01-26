@@ -108,12 +108,19 @@ def handle_person():
     db.session.commit()
     return "ok", 200
 
-@app.route('/user/<int:user_id>', methods=['GET'])
-@jwt_required
+@app.route('/user/<int:user_id>', methods=['GET', 'PUT'])
+# @jwt_required
 def get_single_person(user_id):
     """
     Single person
     """
+    body = request.get_json() #{ 'username': 'new_username'}
+    if request.method == 'PUT':
+        user1 = User.query.get(user_id)
+        user1.username = body["username"]
+        user1.email = body["email"]
+        db.session.commit()
+        return jsonify(user1.serialize()), 200
     
     if request.method == 'GET':
         user1 = User.query.get(user_id)
