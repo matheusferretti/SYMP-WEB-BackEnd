@@ -49,8 +49,11 @@ def login():
 
 
  # Identity can be any data that is json serializable
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token), 200
+    user = {
+        'access_token': create_access_token(identity=email),
+        'user_info': usercheck.serialize()
+    }
+    return jsonify(user), 200
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
